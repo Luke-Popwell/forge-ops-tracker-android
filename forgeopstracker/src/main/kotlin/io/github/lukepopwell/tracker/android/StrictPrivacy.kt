@@ -18,6 +18,11 @@ object StrictPrivacy {
     internal const val FINGERPRINT_LENGTH = 32
 
     private const val WORD = "A-Za-z0-9_"
+    private val EMAIL = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
+    // A quoted value (KeyError: 'Jane Doe') is data, not the shape of the error. Single quotes only open
+    // and close at a word boundary, so a contraction (Couldn't) or the `email' style never starts one.
+    private val DOUBLE_QUOTED = Regex("\"[^\"\\r\\n]*\"")
+    private val SINGLE_QUOTED = Regex("(?<![$WORD])'[^'\\r\\n]*'(?![$WORD])")
     private val HEX_OBJECT_ID = Regex("0x[0-9a-fA-F]{4,}")
     private val UUID = Regex("(?<![$WORD])[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}(?![$WORD])")
     private val NUMBER = Regex("(?<![$WORD])[0-9]+(?![$WORD])")
@@ -35,9 +40,13 @@ object StrictPrivacy {
     // Span data that's structure, not content: the masked statement and which database it ran on.
     private val SPAN_DATA_KEYS = listOf("db.statement", "db.system")
 
-    /** The message with hex object ids, UUIDs and standalone numbers replaced, in that order; `null` is `""`. */
+    /**
+     * The message with emails, quoted values, hex object ids, UUIDs and standalone numbers replaced, in
+     * that order; `null` is `""`.
+     */
     fun normalizeMessage(message: String?): String =
-        (message ?: "").replace(HEX_OBJECT_ID, "0x").replace(UUID, "<uuid>").replace(NUMBER, "<n>")
+        (message ?: "").replace(EMAIL, "<email>").replace(DOUBLE_QUOTED, "<str>").replace(SINGLE_QUOTED, "<str>")
+            .replace(HEX_OBJECT_ID, "0x").replace(UUID, "<uuid>").replace(NUMBER, "<n>")
 
     /**
      * What's sent in place of the message: the first 32 lowercase hex characters of the SHA-256 of

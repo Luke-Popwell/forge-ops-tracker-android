@@ -18,7 +18,7 @@ network call from a dying process: see "Why a report always uploads on the *next
 ```kotlin
 // app/build.gradle.kts
 dependencies {
-    implementation("io.github.luke-popwell.tracker.android:forgeopstracker:0.15.1")
+    implementation("io.github.luke-popwell.tracker.android:forgeopstracker:0.16.0")
 }
 ```
 
