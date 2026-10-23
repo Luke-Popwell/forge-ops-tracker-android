@@ -89,7 +89,7 @@ mavenPublishing {
     // not a real Kotlin package (unlike `namespace` above, which can't contain a hyphen at all),
     // so the two are free to diverge and deliberately do here. See that field's own comment in
     // README.md for why this client's coordinates carry the ".tracker.android" suffix at all.
-    coordinates("io.github.luke-popwell.tracker.android", "forgeopstracker", "0.16.0")
+    coordinates("io.github.luke-popwell.tracker.android", "forgeopstracker", "0.17.0")
 
     pom {
         name.set("ForgeOps Tracker (Android)")
